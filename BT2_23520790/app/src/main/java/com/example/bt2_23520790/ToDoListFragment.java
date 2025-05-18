@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Toast;
+import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -22,25 +22,30 @@ public class ToDoListFragment extends Fragment {
 
     private FragmentTodolistBinding binding;
     private List<Work> WorkList = new ArrayList<>();
+    private WorkListAdapter Adapter;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //LoadData();
+    }
 
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-
         binding = FragmentTodolistBinding.inflate(inflater, container, false);
         return binding.getRoot();
-
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        LoadData();
+        Adapter = new WorkListAdapter(requireContext(), R.layout.item_work, WorkList);
+        binding.todolist.setAdapter(Adapter);
 
-        WorkListAdapter adapter = new WorkListAdapter(requireContext(), R.layout.item_work, WorkList);
-        binding.todolist.setAdapter(adapter);
+        //Click to load detail
         binding.todolist.setOnItemClickListener((parent, v, position, id) -> {
             Work clickedWork = (Work) parent.getItemAtPosition(position);
 
@@ -50,22 +55,76 @@ public class ToDoListFragment extends Fragment {
             NavHostFragment.findNavController(ToDoListFragment.this)
                     .navigate(R.id.action_FirstFragment_to_SecondFragment, bundle);
         });
+
+        //Long press for delete
+        binding.todolist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                showPopup(view, position);
+                return true;
+            }
+        });
+
+        //Receive update from detail
+        getParentFragmentManager().setFragmentResultListener("workUpdateRequest", this,
+                (requestKey, bundle) -> {
+                    Work updatedWork = (Work) bundle.getSerializable("updatedWork");
+                    int index = -1;
+                    for (int i = 0; i < WorkList.size(); i++) {
+                        if (WorkList.get(i).Id == updatedWork.Id) {
+                            index = i;
+                            break;
+                        }
+                    }
+
+                    if (index != -1) {
+                        WorkList.set(index, updatedWork);
+                    } else {
+                        WorkList.add(updatedWork);
+                    }
+
+                    ((WorkListAdapter) binding.todolist.getAdapter()).notifyDataSetChanged();
+                });
+
+
+        //Add button
+        binding.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                Work newWork = new Work("", "", null, false);
+                bundle.putSerializable("work", newWork);
+
+                NavHostFragment.findNavController(ToDoListFragment.this)
+                        .navigate(R.id.action_FirstFragment_to_SecondFragment, bundle);
+            }
+        });
     }
 
-    private void LoadData(){
+    private void LoadData() {
         WorkList.clear();
 
-        Work w1 = new Work();
-        w1.Title = "Do homework";
-        w1.DeadLine = new Date();
-        w1.Status = false;
+        Work w1 = new Work("Do homework", "", new Date(), false);
         WorkList.add(w1);
 
-        Work w2 = new Work();
-        w2.Title = "Go fishing";
-        w2.DeadLine = new Date();
-        w2.Status = true;
+        Work w2 = new Work("Go fishing", "", new Date(), true);
         WorkList.add(w2);
+    }
+
+    private void showPopup(View anchorView, int position) {
+        PopupMenu popup = new PopupMenu(requireContext(), anchorView);
+        popup.getMenuInflater().inflate(R.menu.item_menu, popup.getMenu());
+
+        popup.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.action_delete) {
+                WorkList.remove(position);
+                Adapter.notifyDataSetChanged();
+                return true;
+            }
+            return false;
+        });
+
+        popup.show();
     }
 
     @Override
