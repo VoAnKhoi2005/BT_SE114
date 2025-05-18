@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CustomToolbarTitleText" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textSize">35sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <!-- Custom Toolbar Style -->
+    <style name="CustomToolbar" parent="Widget.Material3.Toolbar">
+        <item name="titleTextAppearance">@style/CustomToolbarTitleText</item>
+    </style>
+</resources>
