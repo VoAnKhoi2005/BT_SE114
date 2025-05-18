@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.bt2_23520790.databinding.FragmentDetailBinding;
+import com.example.bt2_23520790.domain.Work;
 
 public class DetailFragment extends Fragment {
 
@@ -29,10 +30,15 @@ public class DetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.buttonSecond.setOnClickListener(v ->
-                NavHostFragment.findNavController(DetailFragment.this)
-                        .navigate(R.id.action_SecondFragment_to_FirstFragment)
-        );
+        Bundle args = getArguments();
+        if (args != null) {
+            Work work = (Work) args.getSerializable("work");
+        }
+
+//        binding.buttonSecond.setOnClickListener(v ->
+//                NavHostFragment.findNavController(DetailFragment.this)
+//                        .navigate(R.id.action_SecondFragment_to_FirstFragment)
+//        );
     }
 
     @Override
