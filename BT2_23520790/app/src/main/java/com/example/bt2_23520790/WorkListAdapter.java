@@ -42,10 +42,19 @@ public class WorkListAdapter extends ArrayAdapter<Work> {
 
         Work work = getItem(position);
         if (work != null) {
-            binding.titleText.setText(work.Title);
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            String formattedDate = sdf.format(work.DeadLine);
-            binding.deadLineText.setText("Deadline:" + formattedDate);
+            if (work.Title == null || work.Title.isEmpty())
+                binding.titleText.setText("{No title}");
+            else
+                binding.titleText.setText(work.Title);
+
+            if (work.DeadLine != null) {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                String formattedDate = sdf.format(work.DeadLine);
+                binding.deadLineText.setText("Deadline:" + formattedDate);
+            }
+            else
+                binding.deadLineText.setText("Deadline: no deadline");
+
             binding.checkBox.setChecked(work.Status);
             binding.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> work.Status = isChecked);
         }

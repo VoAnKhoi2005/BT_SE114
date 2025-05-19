@@ -10,10 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.bt2_23520790.databinding.FragmentDetailBinding;
 import com.example.bt2_23520790.domain.Work;
@@ -42,10 +40,12 @@ public class DetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //Init data
         Bundle args = getArguments();
         if (args != null) {
             MyWork = (Work) args.getSerializable("work");
         }
+        LoadWork(MyWork);
 
         //Combo box
         ArrayAdapter<String> adapter  = new ArrayAdapter<>(
@@ -59,48 +59,63 @@ public class DetailFragment extends Fragment {
         //Date picker
         binding.deadlineEditView.setOnClickListener(v -> showDatePickerDialog(binding.deadlineEditView));
 
-        //Init data
-        binding.titleTextBox.setText(MyWork.Title);
 
-        if (MyWork.Status)
+    }
+
+    private void LoadWork(Work work){
+        binding.titleTextBox.setText(work.Title);
+
+        if (work.Status)
             binding.statusComboBox.setSelection(1);
         else
             binding.statusComboBox.setSelection(0);
 
-        if (MyWork.DeadLine != null) {
+        if (work.DeadLine != null) {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            String formattedDate = sdf.format(MyWork.DeadLine);
+            String formattedDate = sdf.format(work.DeadLine);
             binding.deadlineEditView.setText(formattedDate);
         }
         else
             binding.deadlineEditView.setText("");
 
-        binding.descriptionEditText.setText(MyWork.Description);
+        binding.descriptionEditText.setText(work.Description);
         binding.descriptionEditText.setMovementMethod(new ScrollingMovementMethod());
     }
 
     private void sendResultAndGoBack() {
-        MyWork.Title = binding.titleTextBox.getText().toString();
-        MyWork.Description = binding.descriptionEditText.getText().toString();
+        String title = binding.titleTextBox.getText().toString();
+        String description = binding.descriptionEditText.getText().toString();
 
+        Date deadline;
         String dateStr = binding.deadlineEditView.getText().toString();
         if (!dateStr.isEmpty()) {
             try {
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                 Date date = sdf.parse(dateStr);
-                MyWork.DeadLine = date;
+                deadline = date;
             } catch (ParseException e) {
                 e.printStackTrace();
-                MyWork.DeadLine = null;
+                deadline = null;
             }
         } else {
-            MyWork.DeadLine = null;
+            deadline = null;
         }
 
-        MyWork.Status = binding.statusComboBox.getSelectedItemPosition() == 1;
+        boolean status = binding.statusComboBox.getSelectedItemPosition() == 1;
+
+        boolean isWorkEmpty = false;
+        if (!title.isEmpty() || !description.isEmpty() || deadline != null) {
+            MyWork.Title = title;
+            MyWork.Description = description;
+            MyWork.DeadLine = deadline;
+            MyWork.Status = status;
+        }
+        else
+            isWorkEmpty = true;
 
         Bundle result = new Bundle();
         result.putSerializable("updatedWork", MyWork);
+        result.putBoolean("isWorkEmpty", isWorkEmpty);
         getParentFragmentManager().setFragmentResult("workUpdateRequest", result);
     }
 

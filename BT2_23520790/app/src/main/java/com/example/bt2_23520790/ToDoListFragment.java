@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -69,18 +70,21 @@ public class ToDoListFragment extends Fragment {
         getParentFragmentManager().setFragmentResultListener("workUpdateRequest", this,
                 (requestKey, bundle) -> {
                     Work updatedWork = (Work) bundle.getSerializable("updatedWork");
-                    int index = -1;
-                    for (int i = 0; i < WorkList.size(); i++) {
-                        if (WorkList.get(i).Id == updatedWork.Id) {
-                            index = i;
-                            break;
-                        }
-                    }
+                    boolean isWorkEmpty = bundle.getBoolean("isWorkEmpty");
 
+                    int index = WorkList.indexOf(updatedWork);
                     if (index != -1) {
-                        WorkList.set(index, updatedWork);
+                        if (isWorkEmpty) {
+                            WorkList.remove(index);
+                            Toast.makeText(requireContext(), "Empty work discard", Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                            WorkList.set(index, updatedWork);
                     } else {
-                        WorkList.add(updatedWork);
+                        if (!isWorkEmpty)
+                            WorkList.add(updatedWork);
+                        else
+                            Toast.makeText(requireContext(), "Empty work discard", Toast.LENGTH_SHORT).show();
                     }
 
                     ((WorkListAdapter) binding.todolist.getAdapter()).notifyDataSetChanged();
