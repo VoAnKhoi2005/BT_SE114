@@ -68,6 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         user.Password = password;
         user.Name = "Nguyễn Văn A";
         user.Address = "Đường Tạ Quang Bửu, Khu phố 6, Thủ Đức, Hồ Chí Minh";
+        user.Department = "Kế toán";
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         intent.putExtra("user", user);
         launcher.launch(intent);

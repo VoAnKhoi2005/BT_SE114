@@ -30,12 +30,14 @@ public class MainActivity extends AppCompatActivity {
         TextView userIdTV = findViewById(R.id.MNV_Textbox);
         TextView nameTV = findViewById(R.id.Name_Textbox);
         TextView addressTV = findViewById(R.id.Address_Textbox);
+        TextView departmentTV = findViewById(R.id.Department_Textbox);
 
         userIdTV.setText(user.UserId);
         nameTV.setText(user.Name);
         addressTV.setText(user.Address);
+        departmentTV.setText(user.Department);
 
-        Button logOutButton = findViewById(R.id.LogOutButtom);
+        Button logOutButton = findViewById(R.id.LogOutButton);
         logOutButton.setOnClickListener(v -> LogOut());
     }
 

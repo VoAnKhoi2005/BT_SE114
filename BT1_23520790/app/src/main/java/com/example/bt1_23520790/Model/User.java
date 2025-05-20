@@ -7,4 +7,5 @@ public class User  implements Serializable {
     public String Name;
     public String Password;
     public String Address;
+    public String Department;
 }
