@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.bt2_23520790.databinding.FragmentDetailBinding;
 import com.example.bt2_23520790.domain.Work;
+import com.example.bt2_23520790.helper.DBHelper;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,6 +26,7 @@ public class DetailFragment extends Fragment {
 
     private FragmentDetailBinding binding;
     private Work MyWork;
+    private DBHelper dbHelper;
     private String[] Statuses = {"Not complete", "Completed"};
 
     @Override
@@ -32,22 +34,29 @@ public class DetailFragment extends Fragment {
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-
         binding = FragmentDetailBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
+    @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //Init data
+        dbHelper = new DBHelper(requireContext());
+
+        // Get work ID from arguments
         Bundle args = getArguments();
         if (args != null) {
-            MyWork = (Work) args.getSerializable("work");
+            String workId = args.getString("workId");
+            if (workId != null) {
+                MyWork = dbHelper.getById(workId);
+                if (MyWork != null) {
+                    LoadWork(MyWork);
+                }
+            }
         }
-        LoadWork(MyWork);
 
-        //Combo box
+        // Combo box for status
         ArrayAdapter<String> adapter  = new ArrayAdapter<>(
                 requireContext(),
                 R.layout.spinner_item,
@@ -56,10 +65,8 @@ public class DetailFragment extends Fragment {
         adapter.setDropDownViewResource(R.layout.spinner_item);
         binding.statusComboBox.setAdapter(adapter);
 
-        //Date picker
+        // Date picker
         binding.deadlineEditView.setOnClickListener(v -> showDatePickerDialog(binding.deadlineEditView));
-
-
     }
 
     private void LoadWork(Work work){
@@ -74,47 +81,43 @@ public class DetailFragment extends Fragment {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             String formattedDate = sdf.format(work.DeadLine);
             binding.deadlineEditView.setText(formattedDate);
-        }
-        else
+        } else {
             binding.deadlineEditView.setText("");
+        }
 
         binding.descriptionEditText.setText(work.Description);
         binding.descriptionEditText.setMovementMethod(new ScrollingMovementMethod());
     }
 
     private void sendResultAndGoBack() {
-        String title = binding.titleTextBox.getText().toString();
-        String description = binding.descriptionEditText.getText().toString();
-
-        Date deadline;
-        String dateStr = binding.deadlineEditView.getText().toString();
-        if (!dateStr.isEmpty()) {
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                Date date = sdf.parse(dateStr);
-                deadline = date;
-            } catch (ParseException e) {
-                e.printStackTrace();
-                deadline = null;
-            }
-        } else {
-            deadline = null;
-        }
-
+        String title = binding.titleTextBox.getText().toString().trim();
+        String description = binding.descriptionEditText.getText().toString().trim();
+        String dateStr = binding.deadlineEditView.getText().toString().trim();
         boolean status = binding.statusComboBox.getSelectedItemPosition() == 1;
 
-        boolean isWorkEmpty = false;
-        if (!title.isEmpty() || !description.isEmpty() || deadline != null) {
+        Date deadline = null;
+        if (!dateStr.isEmpty()) {
+            try {
+                deadline = new SimpleDateFormat("dd/MM/yyyy").parse(dateStr);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        boolean isWorkEmpty = title.isEmpty() && description.isEmpty() && deadline == null;
+
+        if (!isWorkEmpty) {
             MyWork.Title = title;
             MyWork.Description = description;
             MyWork.DeadLine = deadline;
             MyWork.Status = status;
+            dbHelper.update(MyWork);
+        } else {
+            dbHelper.delete(MyWork.getId());
         }
-        else
-            isWorkEmpty = true;
 
         Bundle result = new Bundle();
-        result.putSerializable("updatedWork", MyWork);
+        result.putString("workId", MyWork.getId());
         result.putBoolean("isWorkEmpty", isWorkEmpty);
         getParentFragmentManager().setFragmentResult("workUpdateRequest", result);
     }
@@ -143,5 +146,4 @@ public class DetailFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
 }

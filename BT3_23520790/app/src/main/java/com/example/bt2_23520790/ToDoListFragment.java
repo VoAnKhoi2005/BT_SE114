@@ -14,6 +14,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.bt2_23520790.databinding.FragmentTodolistBinding;
 import com.example.bt2_23520790.domain.Work;
+import com.example.bt2_23520790.helper.DBHelper;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,11 +25,12 @@ public class ToDoListFragment extends Fragment {
     private FragmentTodolistBinding binding;
     private List<Work> WorkList = new ArrayList<>();
     private WorkListAdapter Adapter;
+    private DBHelper dbHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //LoadData();
+        dbHelper = new DBHelper(requireContext());
     }
 
     @Override
@@ -40,79 +42,81 @@ public class ToDoListFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         Adapter = new WorkListAdapter(requireContext(), R.layout.item_work, WorkList);
         binding.todolist.setAdapter(Adapter);
 
-        //Click to load detail
+        LoadDataFromDB();
+
+        // Click to view detail
         binding.todolist.setOnItemClickListener((parent, v, position, id) -> {
             Work clickedWork = (Work) parent.getItemAtPosition(position);
-
             Bundle bundle = new Bundle();
-            bundle.putSerializable("work", clickedWork);
+            bundle.putString("workId", clickedWork.getId());
 
             NavHostFragment.findNavController(ToDoListFragment.this)
                     .navigate(R.id.action_FirstFragment_to_SecondFragment, bundle);
         });
 
-        //Long press for delete
-        binding.todolist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                showPopup(view, position);
-                return true;
-            }
+        // Long press to delete
+        binding.todolist.setOnItemLongClickListener((parent, v, position, id) -> {
+            showPopup(v, position);
+            return true;
         });
 
-        //Receive update from detail
+        // Receive result from detail fragment
         getParentFragmentManager().setFragmentResultListener("workUpdateRequest", this,
                 (requestKey, bundle) -> {
-                    Work updatedWork = (Work) bundle.getSerializable("updatedWork");
+                    String workId = bundle.getString("workId");
                     boolean isWorkEmpty = bundle.getBoolean("isWorkEmpty");
 
-                    int index = WorkList.indexOf(updatedWork);
-                    if (index != -1) {
-                        if (isWorkEmpty) {
-                            WorkList.remove(index);
-                            Toast.makeText(requireContext(), "Empty work discard", Toast.LENGTH_SHORT).show();
+                    Work updatedWork = dbHelper.getById(workId);
+                    int index = -1;
+                    for (int i = 0; i < WorkList.size(); i++) {
+                        if (WorkList.get(i).getId().equals(workId)) {
+                            index = i;
+                            break;
                         }
-                        else
-                            WorkList.set(index, updatedWork);
-                    } else {
-                        if (!isWorkEmpty)
-                            WorkList.add(updatedWork);
-                        else
-                            Toast.makeText(requireContext(), "Empty work discard", Toast.LENGTH_SHORT).show();
                     }
 
-                    ((WorkListAdapter) binding.todolist.getAdapter()).notifyDataSetChanged();
+                    if (index != -1) {
+                        if (isWorkEmpty) {
+                            dbHelper.delete(workId);
+                            WorkList.remove(index);
+                            Toast.makeText(requireContext(), "Work deleted", Toast.LENGTH_SHORT).show();
+                        } else {
+                            WorkList.set(index, updatedWork);
+                        }
+                    } else {
+                        if (!isWorkEmpty && updatedWork != null) {
+                            WorkList.add(updatedWork);
+                        } else {
+                            Toast.makeText(requireContext(), "Empty work discarded", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    Adapter.notifyDataSetChanged();
                 });
 
+        // FAB to add new
+        binding.fab.setOnClickListener(view1 -> {
+            Work newWork = new Work("", "", new Date(), false);
+            dbHelper.addNew(newWork);
 
-        //Add button
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                Work newWork = new Work("", "", null, false);
-                bundle.putSerializable("work", newWork);
+            Bundle bundle = new Bundle();
+            bundle.putString("workId", newWork.getId());
 
-                NavHostFragment.findNavController(ToDoListFragment.this)
-                        .navigate(R.id.action_FirstFragment_to_SecondFragment, bundle);
-            }
+            NavHostFragment.findNavController(ToDoListFragment.this)
+                    .navigate(R.id.action_FirstFragment_to_SecondFragment, bundle);
         });
     }
 
-    private void LoadData() {
+    private void LoadDataFromDB() {
         WorkList.clear();
-
-        Work w1 = new Work("Do homework", "", new Date(), false);
-        WorkList.add(w1);
-
-        Work w2 = new Work("Go fishing", "", new Date(), true);
-        WorkList.add(w2);
+        WorkList.addAll(dbHelper.loadAll());
     }
 
     private void showPopup(View anchorView, int position) {
@@ -121,6 +125,7 @@ public class ToDoListFragment extends Fragment {
 
         popup.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.action_delete) {
+                dbHelper.delete(WorkList.get(position).getId());
                 WorkList.remove(position);
                 Adapter.notifyDataSetChanged();
                 return true;
@@ -136,5 +141,4 @@ public class ToDoListFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
 }
