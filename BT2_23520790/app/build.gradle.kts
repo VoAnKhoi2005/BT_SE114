@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.bt2_23520790"
+    namespace = "com.example.ToDoApp"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.bt2_23520790"
+        applicationId = "com.example.ToDoApp"
         minSdk = 30
         targetSdk = 35
         versionCode = 1

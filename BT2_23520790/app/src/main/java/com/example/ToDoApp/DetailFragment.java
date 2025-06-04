@@ -1,4 +1,4 @@
-package com.example.bt2_23520790;
+package com.example.ToDoApp;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
@@ -13,8 +13,8 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.example.bt2_23520790.databinding.FragmentDetailBinding;
-import com.example.bt2_23520790.domain.Work;
+import com.example.ToDoApp.databinding.FragmentDetailBinding;
+import com.example.ToDoApp.domain.Work;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

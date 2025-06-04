@@ -1,4 +1,4 @@
-package com.example.bt2_23520790;
+package com.example.ToDoApp;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,8 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.bt2_23520790.databinding.FragmentTodolistBinding;
-import com.example.bt2_23520790.domain.Work;
+import com.example.ToDoApp.databinding.FragmentTodolistBinding;
+import com.example.ToDoApp.domain.Work;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,7 +28,6 @@ public class ToDoListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //LoadData();
     }
 
     @Override
@@ -105,16 +104,6 @@ public class ToDoListFragment extends Fragment {
         });
     }
 
-    private void LoadData() {
-        WorkList.clear();
-
-        Work w1 = new Work("Do homework", "", new Date(), false);
-        WorkList.add(w1);
-
-        Work w2 = new Work("Go fishing", "", new Date(), true);
-        WorkList.add(w2);
-    }
-
     private void showPopup(View anchorView, int position) {
         PopupMenu popup = new PopupMenu(requireContext(), anchorView);
         popup.getMenuInflater().inflate(R.menu.item_menu, popup.getMenu());
@@ -136,5 +125,4 @@ public class ToDoListFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
 }
