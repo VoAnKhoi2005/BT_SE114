@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "com.example.bt2_23520790.app-mergeDebugResources-42:/layout/activity_main.xml",
+        "source": "com.example.bt2_23520790.app-main-45:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.example.bt2_23520790.app-mergeDebugResources-42:/layout/content_main.xml",
+        "source": "com.example.bt2_23520790.app-main-45:/layout/content_main.xml"
+    },
+    {
+        "merged": "com.example.bt2_23520790.app-mergeDebugResources-42:/layout/spinner_item.xml",
+        "source": "com.example.bt2_23520790.app-main-45:/layout/spinner_item.xml"
+    },
+    {
+        "merged": "com.example.bt2_23520790.app-mergeDebugResources-42:/layout/fragment_todolist.xml",
+        "source": "com.example.bt2_23520790.app-main-45:/layout/fragment_todolist.xml"
+    },
+    {
+        "merged": "com.example.bt2_23520790.app-mergeDebugResources-42:/layout/item_work.xml",
+        "source": "com.example.bt2_23520790.app-main-45:/layout/item_work.xml"
+    },
+    {
+        "merged": "com.example.bt2_23520790.app-mergeDebugResources-42:/layout/fragment_detail.xml",
+        "source": "com.example.bt2_23520790.app-main-45:/layout/fragment_detail.xml"
+    }
+]
