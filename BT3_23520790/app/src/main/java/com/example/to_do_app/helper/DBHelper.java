@@ -1,4 +1,4 @@
-package com.example.bt2_23520790.helper;
+package com.example.to_do_app.helper;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.bt2_23520790.domain.Work;
+import com.example.to_do_app.domain.Work;
 
 import java.util.ArrayList;
 import java.util.Date;

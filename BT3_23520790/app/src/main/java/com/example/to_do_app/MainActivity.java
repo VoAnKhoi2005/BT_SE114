@@ -1,24 +1,15 @@
-package com.example.bt2_23520790;
+package com.example.to_do_app;
 
 import android.os.Bundle;
 
-import com.example.bt2_23520790.domain.Work;
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.View;
-
 import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.bt2_23520790.databinding.ActivityMainBinding;
+import com.example.to_do_app.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;

@@ -1,4 +1,4 @@
-package com.example.bt2_23520790.domain;
+package com.example.to_do_app.domain;
 
 import java.io.Serializable;
 import java.util.Date;

@@ -1,4 +1,4 @@
-package com.example.bt2_23520790;
+package com.example.to_do_app;
 
 import org.junit.Test;
 

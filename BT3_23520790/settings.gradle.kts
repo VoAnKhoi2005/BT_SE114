@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "BT2 23520790"
+rootProject.name = "To Do App"
 include(":app")
