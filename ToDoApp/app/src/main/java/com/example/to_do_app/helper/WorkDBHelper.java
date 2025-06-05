@@ -11,8 +11,8 @@ import com.example.to_do_app.domain.Work;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class DBHelper extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION = 1;
+public class WorkDBHelper extends SQLiteOpenHelper {
+    public static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "Todo.db";
     public static final String TABLE_NAME = "todos";
     public static final String COLUMN_TITLE = "title";
@@ -31,7 +31,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public static final String SQL_DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
 
-    public DBHelper(Context context) {
+    public WorkDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

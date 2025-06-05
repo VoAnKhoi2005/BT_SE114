@@ -5,7 +5,8 @@
     android:orientation="horizontal"
     android:padding="12dp"
     android:layout_margin="8dp"
-    android:background="@drawable/border"
+    android:id="@+id/root_layout"
+    android:background="@drawable/default_border"
     android:gravity="center_vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -35,7 +36,7 @@
     </LinearLayout>
 
     <CheckBox
-        android:id="@+id/checkBox"
+        android:id="@+id/completeCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:checked="false"

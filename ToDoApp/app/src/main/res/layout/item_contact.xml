@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:layout_margin="6dp"
+    android:gravity="center"
+    android:background="@drawable/default_border"
+    android:clickable="true"
+    android:focusable="true">
+
+    <TextView
+        android:id="@+id/nameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:textColor="?android:textColorPrimary"
+        android:fontFamily="sans-serif-medium"/>
+</LinearLayout>

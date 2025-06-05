@@ -1,4 +1,4 @@
-package com.example.to_do_app;
+package com.example.to_do_app.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.to_do_app.R;
 import com.example.to_do_app.databinding.ItemWorkBinding;
 import com.example.to_do_app.domain.Work;
 
@@ -53,8 +54,14 @@ public class WorkListAdapter extends ArrayAdapter<Work> {
             else
                 binding.deadLineText.setText("Deadline: no deadline");
 
-            binding.checkBox.setChecked(work.Status);
-            binding.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> work.Status = isChecked);
+            binding.completeCheckBox.setChecked(work.Status);
+            binding.completeCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> work.Status = isChecked);
+
+            if (work.Selected) {
+                binding.rootLayout.setBackgroundResource(R.drawable.selected_border);
+            } else {
+                binding.rootLayout.setBackgroundResource(R.drawable.default_border);
+            }
         }
 
         return convertView;

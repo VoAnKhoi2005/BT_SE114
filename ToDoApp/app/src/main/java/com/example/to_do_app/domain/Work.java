@@ -2,6 +2,7 @@ package com.example.to_do_app.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 public class Work implements Serializable {
@@ -10,16 +11,9 @@ public class Work implements Serializable {
     public String Description = "";
     public Date DeadLine;
     public boolean Status = false;
+    public boolean Selected = false;
 
     private Work(){}
-
-    public Work(String title, String description, Date deadLine, boolean status){
-        Id = UUID.randomUUID().toString();
-        Title = title;
-        Description = description;
-        DeadLine = deadLine;
-        Status = status;
-    }
 
     public Work(String id, String title, String description, Date deadLine, boolean status){
         Id = id;

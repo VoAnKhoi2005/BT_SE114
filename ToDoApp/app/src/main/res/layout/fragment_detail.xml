@@ -74,6 +74,43 @@
                 android:hint="Select a date"/>
         </LinearLayout>
 
+        <!-- Người được giao -->
+        <TextView
+            android:id="@+id/assignedPeopleLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Assigned People:"
+            android:textSize="20sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:gravity="center_vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/contactRecyclerView"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:scrollbars="horizontal"
+                android:clipToPadding="false"
+                tools:listitem="@layout/item_contact" />
+
+            <ImageButton
+                android:id="@+id/addContactButton"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Add Person"
+                android:padding="12dp"
+                android:src="@android:drawable/ic_input_add"
+                app:tint="?attr/colorPrimary" />
+        </LinearLayout>
+
         <EditText
             android:id="@+id/descriptionEditText"
             android:layout_width="match_parent"
@@ -89,7 +126,6 @@
             android:scrollbars="vertical"
             android:overScrollMode="always"
             android:scrollHorizontally="false" />
-
     </LinearLayout>
 
     <!-- BottomAppBar fixed at bottom -->
